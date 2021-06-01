@@ -53,7 +53,7 @@ def fsl_bet(input_file, out_file):
 '''
 Employs the FSL's FAST algorithm to segment brain tissues [CSF, GM, WM]
 ''' 
-def fsl_fast(input_file, out_file):
+def fsl_fast(input_file, out_file, TCM):
 	fslfast = FAST()
 	fslfast.inputs.in_files = input_file
 	#fslfast.inputs.out_basename = out_file
@@ -62,6 +62,7 @@ def fsl_fast(input_file, out_file):
 	fslfast.inputs.segments = True
 	fslfast.inputs.no_pve = True
 	fslfast.inputs.output_type = 'NIFTI'
+	#fslfast.outputs.tissue_class_map = TCM
 
 	fslfast.run()
 

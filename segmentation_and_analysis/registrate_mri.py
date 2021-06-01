@@ -10,7 +10,6 @@ from pathlib import Path
 '''
 Funcion para registrar la imagen en el nuevo espacio
 '''
-
 def ants_registration():
 
 	'''

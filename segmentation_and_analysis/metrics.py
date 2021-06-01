@@ -3,13 +3,11 @@ import sys
 import nibabel as nib
 import numpy as np
 
-import matplotlib.pyplot as plt
-
 from sklearn.metrics import jaccard_score, accuracy_score, f1_score
 from skimage import metrics
 
-import tensorflow as tf
-from tensorflow.keras import backend as K
+#import tensorflow as tf
+#from tensorflow.keras import backend as K
 
 np.set_printoptions(precision=3, suppress=True)
 

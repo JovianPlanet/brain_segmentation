@@ -3,11 +3,12 @@ from pathlib import Path
 import nibabel as nib
 import numpy as np
 from nipype.interfaces.fsl import BET
+from ants import image_read, image_write, registration, apply_transforms
 
-def girarVolumen(ref_path='/media/henryareiza/Disco_Compartido/david/datasets/MRBrainS13DataNii/TrainingData/2/T1.nii', 
-					in_dir='/media/henryareiza/Disco_Compartido/david/datasets/MRBrainS18DataNii/training', 
-					out_dir='',
-					mask=False):
+def girarVolumen(ref_path='dataset/input_datasets/MRBrainS13DataNii/TrainingData/2/T1.nii', 
+				in_dir='dataset/input_datasets/MRBrainS18DataNii/training', 
+				out_dir='',
+				mask=False):
 
 	ref_vol = nib.load(ref_path)
 
@@ -41,6 +42,7 @@ def change_dtype(vol, filename):
 	new_vol = nib.Nifti1Image(target_data, target.affine)
 	nib.save(new_vol, filename)
 
+'''
 def skull_strip_fsl_BET(input_file, out_file):
 	skullstrip = BET()
 	skullstrip.inputs.in_file = input_file 		#os.path.join(head_path, head)
@@ -48,6 +50,7 @@ def skull_strip_fsl_BET(input_file, out_file):
 	skullstrip.inputs.frac = 0.2
 	skullstrip.inputs.robust = True
 	skullstrip.run()
+'''
 
 def normalize_labels(in_dir, in_file, out_dir):
 
@@ -75,3 +78,38 @@ def normalize_labels(in_dir, in_file, out_dir):
 
 	wm_vol = nib.Nifti1Image(wm_data, target.affine)
 	nib.save(wm_vol, os.path.join(wm_dir, in_file[:-4]+'_MASK_WM.nii'))
+
+def ants_registration(reg_type, 
+		ref_mri='dataset/input_datasets/MRBrainS13DataNii/TrainingData/2/T1.nii', 
+		reg_mri='', 
+		reg_dir='dataset/input_datasets/IBSR_nifti_stripped', 
+		out_dir='dataset/pretrain_datasets/IBSR_registered'):
+
+	if reg_mri:
+		reg_mri = '_'+reg_mri
+	else:
+		reg_mri = ''
+
+	'''
+	Se itera sobre las subcarpetas del directorio
+	'''
+
+	mri_dir = next(os.walk(reg_dir))[1] # [2]: lists files; [1]: lists subdirectories; [0]: ?
+	print(mri_dir)
+
+	ref = image_read(ref_mri)#, pixeltype='unsigned char')
+
+	Path(out_dir).mkdir(parents=True, exist_ok=True)
+
+	for directory in mri_dir[:]:
+
+		if reg_type == 'segmentada':
+			img_IBSR = image_read(os.path.join(reg_dir, directory, directory+reg_mri+'_ana.nii.gz'))#, pixeltype='unsigned char')
+			rs2_reg = registration(fixed=ref, moving=img_IBSR, type_of_transform = 'DenseRigid' )
+			rs2 = apply_transforms(fixed=ref, moving=img_IBSR, transformlist=rs2_reg['fwdtransforms'], interpolator='multiLabel')
+		else:
+			img_IBSR = image_read(os.path.join(reg_dir, directory, directory+'_ana'+reg_mri+'.nii.gz'))#, pixeltype='unsigned char')
+			rs2_reg = registration(fixed=ref, moving=img_IBSR, type_of_transform = 'DenseRigid' )
+			rs2 = apply_transforms(fixed=ref, moving=img_IBSR, transformlist=rs2_reg['fwdtransforms'])
+		print(directory+reg_mri+'_ana.nii.gz')
+		image_write(rs2, os.path.join(out_dir, 'REG_' + directory + '.nii'), ri=False)
