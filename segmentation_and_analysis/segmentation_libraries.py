@@ -2,11 +2,13 @@ import os
 
 import nibabel as nib
 import numpy as np
+import ants
 
 from pathlib import Path
 
 from nipype.interfaces.freesurfer import ReconAll, MRIConvert
 from nipype.interfaces.fsl import BET, FAST
+import nipype.interfaces.spm as spm
 
 from dipy.io.image import load_nifti_data, load_nifti
 from dipy.segment.tissue import TissueClassifierHMRF
@@ -53,7 +55,7 @@ def fsl_bet(input_file, out_file):
 '''
 Employs the FSL's FAST algorithm to segment brain tissues [CSF, GM, WM]
 ''' 
-def fsl_fast(input_file, out_file, TCM):
+def fsl_fast(input_file, out_file):
 	fslfast = FAST()
 	fslfast.inputs.in_files = input_file
 	#fslfast.inputs.out_basename = out_file
@@ -62,9 +64,8 @@ def fsl_fast(input_file, out_file, TCM):
 	fslfast.inputs.segments = True
 	fslfast.inputs.no_pve = True
 	fslfast.inputs.output_type = 'NIFTI'
-	#fslfast.outputs.tissue_class_map = TCM
 
-	fslfast.run()
+	return fslfast.run()
 
 '''
 Performs segmentation of brain tissues by calling the DIPY library
@@ -72,17 +73,27 @@ Performs segmentation of brain tissues by calling the DIPY library
 def dipy_segmentation(brain_path, out_path):
 	nclass = 4
 	beta = 0.1
-	img, static_affine = load_nifti(os.path.join(brain_path, 'fsl_brainmask.nii.gz'))
-	hmrf = TissueClassifierHMRF()
+	img, static_affine = load_nifti(brain_path)#(os.path.join(brain_path, 'fsl_brainmask.nii.gz'))
+	hmrf = TissueClassifierHMRF(verbose=False)
 	initial_segmentation, final_segmentation, PVE = hmrf.classify(img, nclass, beta, max_iter=20)
 
-	nii_CSF = nib.Nifti1Image(PVE[:,:,:,0], static_affine)
-	nib.save(nii_CSF, os.path.join(out_path, 'fsl_dipy_CSF.nii'))
-	nii_GM = nib.Nifti1Image(PVE[:,:,:,1], static_affine)
-	nib.save(nii_GM, os.path.join(out_path, 'fsl_dipy_GM.nii'))
-	nii_WM = nib.Nifti1Image(PVE[:,:,:,2], static_affine)
-	nib.save(nii_WM, os.path.join(out_path, 'fsl_dipy_WM.nii'))
+	nii_CSF = nib.Nifti1Image(np.where(PVE[:,:,:,0]>0.5, 1, 0).astype(np.int16), static_affine)
+	nib.save(nii_CSF, out_path + '_dipy_CSF.nii') #os.path.join(out_path, '_dipy_CSF.nii'))
+	nii_GM = nib.Nifti1Image(np.where(PVE[:,:,:,2]>0.5, 1, 0).astype(np.int16), static_affine)
+	nib.save(nii_GM, out_path + '_dipy_GM.nii') #os.path.join(out_path, '_dipy_GM.nii'))
+	nii_WM = nib.Nifti1Image(np.where(PVE[:,:,:,3]>0.5, 1, 0).astype(np.int16), static_affine)
+	nib.save(nii_WM, out_path + '_dipy_WM.nii') #os.path.join(out_path, '_dipy_WM.nii'))
 
+def ants_segmentation(in_file):
+	img = ants.image_read(in_file)
+	mask = ants.get_mask(img)
+	seg2 = ants.atropos(img)
+	print(seg2)
+
+def spm_segmentation(in_file):
+	seg = spm.Segment()
+	seg.inputs.data = in_file
+	seg.run()
 '''
 En Desarrollo
 

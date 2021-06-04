@@ -42,16 +42,6 @@ def change_dtype(vol, filename):
 	new_vol = nib.Nifti1Image(target_data, target.affine)
 	nib.save(new_vol, filename)
 
-'''
-def skull_strip_fsl_BET(input_file, out_file):
-	skullstrip = BET()
-	skullstrip.inputs.in_file = input_file 		#os.path.join(head_path, head)
-	skullstrip.inputs.out_file = out_file 		#os.path.join(brain_path, fsl_brain)
-	skullstrip.inputs.frac = 0.2
-	skullstrip.inputs.robust = True
-	skullstrip.run()
-'''
-
 def normalize_labels(in_dir, in_file, out_dir):
 
 	filepath = os.path.join(in_dir, in_file)
