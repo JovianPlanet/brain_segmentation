@@ -56,9 +56,9 @@ def normalize_labels(in_dir, in_file, out_dir):
 	target = nib.load(filepath)
 	target_data = target.get_fdata()
 
-	csf_data = np.int16(np.where(target_data == 1, 5, 0)) #5 if target_data == 1 else 0
+	csf_data = np.int16(np.where(target_data == 1, 1, 0)) #5 if target_data == 1 else 0
 	gm_data = np.int16(np.where(target_data == 2, 1, 0)) #1 if target_data == 2 else 0
-	wm_data = np.int16(np.where(target_data == 3, 3, 0)) #target_data == 3
+	wm_data = np.int16(np.where(target_data == 3, 1, 0)) #3 if target_data == 3 else 0
 
 	csf_vol = nib.Nifti1Image(csf_data, target.affine)
 	nib.save(csf_vol, os.path.join(csf_dir, in_file[:-4]+'_MASK_CSF.nii'))

@@ -98,9 +98,14 @@ for subject in natsorted(os.listdir(test_feat_path)):
 
         #plot_slice(prueba, test_mask, predictions)
 
-    Path(os.path.join(result_folder, args.tejido, subject)).mkdir(parents=True, exist_ok=True)
+    Path(os.path.join(result_folder, subject)).mkdir(parents=True, exist_ok=True)
     nii_segmented = nib.Nifti1Image(segmented, img_affine) # np.eye(4)
+    # nib.save(nii_segmented, 
+    #         os.path.join(result_folder, args.tejido, 
+    #         subject, 'unet3D_predictions_'+TISSUE+'.nii'))
+
     nib.save(nii_segmented, 
-            os.path.join(result_folder, args.tejido, 
+            os.path.join(result_folder, 
             subject, 'unet3D_predictions_'+TISSUE+'.nii'))
+
 

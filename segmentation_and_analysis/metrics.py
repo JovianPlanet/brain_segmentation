@@ -6,16 +6,6 @@ import numpy as np
 from sklearn.metrics import jaccard_score, accuracy_score, f1_score
 from skimage import metrics
 
-#import tensorflow as tf
-#from tensorflow.keras import backend as K
-
-np.set_printoptions(precision=3, suppress=True)
-
-working_dir = '/media/henryareiza/Disco_Compartido/david/datasets/skullStrippedMRBrainS18DataNii/'
-unet_dir = '/media/henryareiza/Disco_Compartido/david/datasets/skullStripped18Subvolumes/results'
-
-subjects = next(os.walk(working_dir))[1]
-
 def scikit_jaccard_score(seg_img, mask):
 	return jaccard_score(mask, seg_img)
 
@@ -28,6 +18,12 @@ def dice_coeff(y_true, y_pred, axis=(1, 2, 3),
     dice_coefficient = np.mean(dice_numerator / dice_denominator)
     return dice_coefficient
 
+np.set_printoptions(precision=3, suppress=True)
+
+working_dir = '/media/henryareiza/Disco_Compartido/david/datasets/skullStrippedMRBrainS18DataNii/'
+unet_dir = '/media/henryareiza/Disco_Compartido/david/datasets/skullStripped18Subvolumes/results'
+
+subjects = next(os.walk(working_dir))[1]
 
 if len(sys.argv)>1:
     TISSUE = sys.argv[1]
@@ -37,7 +33,7 @@ else:
 tissues = {'GM': '1', 'WM': '2', 'CSF': '0'}
 
 for subject in subjects:
-	files = next(os.walk(os.path.join(working_dir, subject)))[2]
+	files = next(os.walk(os.path.join(working_dir, subject)))[2] # [2]: lists files; [1]: lists subdirectories; [0]: ?
 
 	mask = nib.load(os.path.join(working_dir, subject, 'manual_mask_'+TISSUE+'.nii'))
 	mask_data = np.where(mask.get_fdata()>0.5, 1, 0)

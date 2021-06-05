@@ -24,12 +24,12 @@ out_path = 'dataset/dataset_completo.h5'
 if args.in_dir:
 	in_path = args.in_dir
 else:
-	in_path = 'dataset/input_ds'
+	in_path = 'dataset/pretrain_datasets/features_fsl_strip'
 
 
 mri_dir = next(os.walk(in_path))[2] # [2]: lists files; [1]: lists subdirectories; [0]: ?
 
-Path(out_path).mkdir(parents=True, exist_ok=True)
+#Path(out_path).mkdir(parents=True, exist_ok=True)
 
 with h5py.File(out_path, "a") as f:
 	grp = f.require_group(args.groupname)

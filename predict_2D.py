@@ -121,5 +121,6 @@ for index_, i in enumerate(idx[len(feats)-int(len(feats)*0.2/2):]):
 
 	Path(os.path.join(result_folder, feats[i])).mkdir(parents=True, exist_ok=True)
 	nii_segmented = nib.Nifti1Image(segmented, affine) # np.eye(4)
-	nib.save(nii_segmented, os.path.join(result_folder, feats[i], 'unet2D_predictions_'+TISSUE+'.nii'))
+	nib.save(nii_segmented, 
+		     os.path.join(result_folder, feats[i], 'unet2D_predictions_'+TISSUE+'.nii'))
 

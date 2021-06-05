@@ -114,7 +114,7 @@ def get_manual_mask(tissues, img, out_file, filename):
 	for tissue, value in tissues.items():
 		print(tissue)
 		print(value)
-		tissue_mask= np.where(img_mask==value, value, 0)
+		tissue_mask= np.where(img_mask==value, 1, 0)
 		nii_mask = nib.Nifti1Image(tissue_mask*1, static_affine)
 		nib.save(nii_mask, os.path.join(out_file, filename+tissue+'.nii'))
 
