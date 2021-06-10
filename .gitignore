@@ -3,6 +3,9 @@
 **/Pesos
 **/predictions
 **/segmentation_and_analysis/__pycache__
+**/segmentation_and_analysis/metrics.py
+**/segmentation_and_analysis/make_ds.py
+**/segmentation_and_analysis/registrate_mri.py
 **/unet2D/__pycache__
 **/unet2D/load_weights_unet2D.py
 **/unet2D/train_unet2D.py
