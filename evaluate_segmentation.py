@@ -48,6 +48,8 @@ for index_, i in enumerate(idx):
 	#print('masks[i] {}'.format(masks[i]))
 	print('feat[i] {}'.format(feat[i]))
 
+	subject = feat[i].split('.')[0]
+
 	mask = get_array(data_, group, masks[i])
 	print(np.unique(mask))
 
@@ -146,37 +148,37 @@ for index_, i in enumerate(idx):
 	DICE__.append(DICE_)
 	print('UNET3D DICE score: {:.3f}\n'.format(DICE))
 
-'''
-Create Pandas' Dataframes, save table and figures, plot figure
-'''
-df_roc = pd.DataFrame(roc__, columns=['FSL', 'Dipy', 'U-Net 2D', 'U-Net 3D']).assign(Métrica='ROC AUC')
-df_jac = pd.DataFrame(jac__, columns=['FSL', 'Dipy', 'U-Net 2D', 'U-Net 3D']).assign(Métrica='Jaccard Score')
-df_ssim = pd.DataFrame(ssim__, columns=['FSL', 'Dipy', 'U-Net 2D', 'U-Net 3D']).assign(Métrica='SSIM')
-df_DICE = pd.DataFrame(DICE__, columns=['FSL', 'Dipy', 'U-Net 2D', 'U-Net 3D']).assign(Métrica='Dice')
-	
-cdf = pd.concat([df_roc, df_jac, df_ssim, df_DICE])
+	'''
+	Create Pandas' Dataframes, save table and figures, plot figure
+	'''
+	df_roc = pd.DataFrame(roc__, columns=['FSL', 'Dipy', 'U-Net 2D', 'U-Net 3D']).assign(Métrica='ROC AUC')
+	df_jac = pd.DataFrame(jac__, columns=['FSL', 'Dipy', 'U-Net 2D', 'U-Net 3D']).assign(Métrica='Jaccard Score')
+	df_ssim = pd.DataFrame(ssim__, columns=['FSL', 'Dipy', 'U-Net 2D', 'U-Net 3D']).assign(Métrica='SSIM')
+	df_DICE = pd.DataFrame(DICE__, columns=['FSL', 'Dipy', 'U-Net 2D', 'U-Net 3D']).assign(Métrica='Dice')
+		
+	cdf = pd.concat([df_roc, df_jac, df_ssim, df_DICE])
 
-mdf = pd.melt(cdf, id_vars=['Métrica'], var_name=['Técnica'], value_name='Puntaje')
+	mdf = pd.melt(cdf, id_vars=['Métrica'], var_name=['Técnica'], value_name='Puntaje')
 
-Path(analysis_folder).mkdir(parents=True, exist_ok=True)
+	Path(analysis_folder).mkdir(parents=True, exist_ok=True)
 
-ax = sns.boxplot(x="Técnica", y="Puntaje", hue="Métrica", data=mdf)
-ax.axvline(x=1.5, color='0.4', linestyle=':')
-ax.axvline(x=0.5, color='0.4', linestyle=':')
-ax.axvline(x=2.5, color='0.4', linestyle=':')
+	ax = sns.boxplot(x="Técnica", y="Puntaje", hue="Métrica", data=mdf)
+	ax.axvline(x=1.5, color='0.4', linestyle=':')
+	ax.axvline(x=0.5, color='0.4', linestyle=':')
+	ax.axvline(x=2.5, color='0.4', linestyle=':')
 
-ax.set_title(TISSUE)
+	ax.set_title(TISSUE)
 
-fig = ax.get_figure()
-fig.savefig(analysis_folder+'/boxplot_'+TISSUE+'.tiff', dpi=300, format='tiff')
+	fig = ax.get_figure()
+	fig.savefig(analysis_folder+'/boxplot_'+subject+'_'+TISSUE+'.tiff', dpi=300, format='tiff')
 
-cdf = pd.concat([df_roc, df_jac, df_ssim, df_DICE], join='inner').sort_index(level=['0', '1', '2', '3', '4', '5', '6'])
-cdf = cdf.reindex(columns=['Métrica', 'FSL', 'Dipy', 'U-Net 2D', 'U-Net 3D'])
-cdf.to_excel(analysis_folder+'/results_table_MRBrainS'+'_'+TISSUE+'.xlsx')
+	cdf = pd.concat([df_roc, df_jac, df_ssim, df_DICE], join='inner').sort_index(level=['0', '1', '2', '3', '4', '5', '6'])
+	cdf = cdf.reindex(columns=['Métrica', 'FSL', 'Dipy', 'U-Net 2D', 'U-Net 3D'])
+	cdf.to_excel(analysis_folder+'/table_'+subject+'_'+TISSUE+'.xlsx')
 
-plt.show()
-plt.clf()
-plt.close()
+	plt.show()
+	plt.clf()
+	plt.close()
 
 
 
