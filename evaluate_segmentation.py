@@ -23,12 +23,12 @@ TISSUE = args.tejido
 tissues = { 'GM' : 1, 'BG' : 2, 'WM' : 3, 'WML' : 4,
             'CSF' : 5, 'VEN' : 6, 'CER' : 7, 'BSTEM' : 8}
 
-data_ = 'dataset/dataset_completo.h5'
-unet3d_dir = 'predictions/3D'
-unet2d_dir = 'predictions/2D'
-dipy_dir = 'dataset/reference_segmentations/dipy'
-fsl_dir = 'dataset/reference_segmentations/fsl'
-analysis_folder = 'predictions/plots_and_tables'
+data_ = os.path.join('dataset', 'dataset_completo.h5') #'dataset/dataset_completo.h5'
+unet3d_dir = os.path.join('predictions', '3D') #'predictions/3D'
+unet2d_dir = os.path.join('predictions', '2D') #'predictions/2D'
+dipy_dir = os.path.join('dataset', 'reference_segmentations', 'dipy') #'dataset/reference_segmentations/dipy'
+fsl_dir = os.path.join('dataset', 'reference_segmentations', 'fsl') #'dataset/reference_segmentations/fsl'
+analysis_folder = os.path.join('predictions', 'plots_and_tables') #'predictions/plots_and_tables'
 
 group = 'etiquetas_'+TISSUE
 masks = get_h5_keys(data_, group)
