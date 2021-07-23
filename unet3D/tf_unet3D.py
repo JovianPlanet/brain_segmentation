@@ -1,8 +1,4 @@
-#import os
-#import sys
-#import numpy as np
 import matplotlib.pyplot as plt
-#import nibabel as nib
 import tensorflow as tf
 from tensorflow import keras
 from tensorflow.keras import backend as K
@@ -16,18 +12,19 @@ from tensorflow.keras.models import Model
 from tensorflow.keras.callbacks import EarlyStopping, ModelCheckpoint
 
 
-def dice_coeff(y_true, y_pred, axis=(1, 2, 3), 
-                     epsilon=0.00001):
-    y_pred = tf.where(K.greater_equal(y_pred,0.5),1.,0.)
-    # y_pred = y_pred.astype(np.float32) 
+def dice_coeff(y_true, y_pred, axis=(1, 2, 3), epsilon=0.00001):
+
+    y_pred = tf.where(K.greater_equal(y_pred, 0.5), 1., 0.)
+
     dice_numerator = K.sum(2 * y_true * y_pred, axis= axis) + epsilon
-    dice_denominator = K.sum(y_true,axis= axis) + K.sum(y_pred, axis = axis) + epsilon
-    dice_coefficient = K.mean(dice_numerator / dice_denominator,axis = 0)
+    dice_denominator = K.sum(y_true, axis= axis) + K.sum(y_pred, axis = axis) + epsilon
+    dice_coefficient = K.mean(dice_numerator / dice_denominator, axis = 0)
+    
     return dice_coefficient
 
-def unet_3D(x,y,z):
-    #f = [16, 32, 64, 128, 256]
-    inputs  = Input((x,y,z,1))
+def unet_3D(x, y, z):
+
+    inputs  = Input((x, y, z, 1))
  
     #IMAGEN DE ENTRADA
     p0 = inputs

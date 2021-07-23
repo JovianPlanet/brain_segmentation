@@ -15,6 +15,10 @@ import gif_your_nifti.core as gif2nif
 
 from segmentation_and_analysis.read_h5py import get_array, get_h5_keys
 
+'''
+En este codigo se crean la imagenes para mostrar los resultados de las segmentaciones
+'''
+
 np.set_printoptions(precision=3, suppress=True)
 
 def visualize_data_gif(original_, data_, data2, sujeto, tejido):
@@ -27,7 +31,10 @@ def visualize_data_gif(original_, data_, data2, sujeto, tejido):
         z = data2[:, :, min(i, data_.shape[2] - 1)] #min(i, data_.shape[2] - 1)]
         img = np.concatenate((x, y, z), axis=1)
         images.append(img)#.astype(np.uint8)) # Se pasa a uint8 para evitar un warning
-    imageio.mimsave(analysis_folder+'/'+sujeto+'_'+tejido+'.gif', images, 'GIF', duration=0.1)
+        
+    name = os.path.join(analysis_folder, sujeto+'_'+tejido+'.gif')
+    imageio.mimsave(name, images, 'GIF', duration=0.1)
+    #imageio.mimsave(analysis_folder+'/'+sujeto+'_'+tejido+'.gif', images, 'GIF', duration=0.1)
     return #Image(filename="/tmp/gif.gif", format='png')
 
 parser = argparse.ArgumentParser()
@@ -39,18 +46,18 @@ TISSUE = args.tejido
 tissues = { 'GM' : 1, 'BG' : 2, 'WM' : 3, 'WML' : 4,
             'CSF' : 5, 'VEN' : 6, 'CER' : 7, 'BSTEM' : 8}
 
-feats13 = 'dataset/input_datasets/MRBrainS13DataNii/TrainingData'
-feats18 = 'dataset/input_datasets/MRBrainS18DataNii/training'
-featsIBSR = 'dataset/input_datasets/IBSR_nifti_stripped'
+feats13 = os.path.join('dataset', 'input_datasets', 'MRBrainS13DataNii', 'TrainingData') #'dataset/input_datasets/MRBrainS13DataNii/TrainingData'
+feats18 = os.path.join('dataset', 'input_datasets', 'MRBrainS18DataNii', 'training') #'dataset/input_datasets/MRBrainS18DataNii/training'
+featsIBSR = os.path.join('dataset', 'input_datasets', 'IBSR_nifti_stripped') #'dataset/input_datasets/IBSR_nifti_stripped'
 
-data_dir = 'dataset/dataset_completo.h5'
+data_dir = os.path.join('dataset', 'dataset_completo.h5') #'dataset/dataset_completo.h5'
 
-fsl_dir = 'dataset/reference_segmentations/fsl'
-dipy_dir = 'dataset/reference_segmentations/dipy'
-unet3D_dir = 'predictions/3D'
-unet2D_dir = 'predictions/2D'
+fsl_dir = os.path.join('dataset', 'reference_segmentations', 'fsl') #'dataset/reference_segmentations/fsl'
+dipy_dir = os.path.join('dataset', 'reference_segmentations', 'dipy') #'dataset/reference_segmentations/dipy'
+unet3D_dir = os.path.join('predictions', '3D') #'predictions/3D'
+unet2D_dir = os.path.join('predictions', '2D') #'predictions/2D'
 
-analysis_folder = 'predictions/plots_and_tables'
+analysis_folder = os.path.join('predictions', 'plots_and_tables') #'predictions/plots_and_tables'
 
 tissues = {'GM': '1', 'WM': '2', 'CSF': '0'}
 tech = {'FSL':0, 'DIPY':1, 'UNET3D':2, 'UNET2D':3}
@@ -104,15 +111,16 @@ for index_, i in enumerate(idx):
 
     #fig = ax.get_figure()
     #plt.savefig(analysis_folder+'/projection_seg_MRBrainS'+DATASET+'-'+SUBJECT+'.tiff', dpi=300, format='tiff')
-    plt.savefig(analysis_folder+'/'+feat[i].split('.')[0]+'_'+args.tejido+'.tiff', 
+
+    name = os.path.join(analysis_folder, feat[i].split('.')[0]+'_'+args.tejido+'.eps')
+    plt.savefig(name, #analysis_folder+'/'+feat[i].split('.')[0]+'_'+args.tejido+'.tiff', 
                 dpi=300, 
-                format='tiff', 
+                format='eps', #'tiff', 
                 transparent=True, 
                 bbox_inches='tight', 
                 pad_inches=0.01)
 
     plt.show()
-
 
     # GIF
     visualize_data_gif(msk_data, 

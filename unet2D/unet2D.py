@@ -10,9 +10,9 @@ import matplotlib.pyplot as plt
 '''
 CONSTRUCCION RED UNET2D
 '''
-def unet2D(image_row,image_col):
-    #f = [16, 32, 64, 128, 256]
-    inputs = Input((image_row,image_col,1)) 
+def unet2D(image_row, image_col):
+
+    inputs = Input((image_row, image_col, 1)) 
     
     # IMAGEN DE ENTRADA
     p0 = inputs

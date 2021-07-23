@@ -170,11 +170,14 @@ for index_, i in enumerate(idx):
 	ax.set_title(TISSUE)
 
 	fig = ax.get_figure()
-	fig.savefig(analysis_folder+'/boxplot_'+subject+'_'+TISSUE+'.tiff', dpi=300, format='tiff')
+	savename = os.path.join(analysis_folder, 'boxplot_'+subject+'_'+TISSUE)
+	fig.savefig(savename, dpi=300, format='tiff')
 
 	cdf = pd.concat([df_roc, df_jac, df_ssim, df_DICE], join='inner').sort_index(level=['0', '1', '2', '3', '4', '5', '6'])
 	cdf = cdf.reindex(columns=['Métrica', 'FSL', 'Dipy', 'U-Net 2D', 'U-Net 3D'])
-	cdf.to_excel(analysis_folder+'/table_'+subject+'_'+TISSUE+'.xlsx')
+	
+	savename = os.path.join(analysis_folder, 'table_'+subject+'_'+TISSUE+'.xlsx')
+	cdf.to_excel(savename)
 
 	plt.show()
 	plt.clf()
