@@ -23,8 +23,8 @@ for subject in subjects:
 	Ojo: fsl_fast no permite que las imagenes de salida queden en el directorio deseado con la 
 	estructura de directorios que se viene trabajando
 	'''
-	fast = fsl_fast(os.path.join(brains_dir, subject), 
-	'/media/henryareiza/Disco_Compartido/david/codes/dataset/reference_segmentations/fsl/'+'HOLAfast_'+subject)
+	fast = fsl_fast(os.path.join(brains_dir, subject))#, 
+	#'/media/henryareiza/Disco_Compartido/david/codes/dataset/reference_segmentations/fsl/'+'HOLAfast_'+subject)
 
 	ext = 7 if '.gz' in subject else 4
 
