@@ -5,7 +5,7 @@ on images of the MRBrainS13, MRBrainS18 and IBSR datasets using UNET2D and UNET3
 
 ### Preparations:
 
-First create a folder in the working directory called 'dataset' and another folder named 'input_datasets' inside it, all the databases should be located inside this folder and should have this structure:
+Clone this repository and 'cd' to it. Create a folder in the working directory called 'dataset' and another folder named 'input_datasets' inside it, all the databases should be located inside the 'input_datasets' folder and should have this structure:
 
 	dataset
 		input_datasets

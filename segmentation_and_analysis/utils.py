@@ -84,13 +84,13 @@ def ants_registration(reg_type,
 		reg_dir=None, #'dataset/input_datasets/IBSR_nifti_stripped', 
 		out_dir=None): #'dataset/pretrain_datasets/IBSR_registered'):
 
-	if ref_mri = None:
+	if ref_mri == None:
 		ref_mri = os.path.join('dataset', 'input_datasets', 'MRBrainS13DataNii', 'TrainingData', '2', 'T1.nii')
 
-	if reg_dir = None:
+	if reg_dir == None:
 		reg_dir = os.path.join('dataset', 'input_datasets', 'IBSR_nifti_stripped')
 
-	if reg_dir = None:
+	if reg_dir == None:
 		reg_dir = os.path.join('dataset', 'pretrain_datasets', 'IBSR_registered')
 
 	if reg_mri:
