@@ -5,6 +5,10 @@ import h5py
 import nibabel as nib
 from natsort import natsorted
 
+'''
+Codigo para crear el archivo h5 donde se almacenan todas las imagenes de las diferentes bases de datos junto 
+con su matriz de affine
+'''
 
 '''
 Cargar los argumentos
@@ -19,12 +23,12 @@ parser.add_argument("groupname",
 parser.add_argument("--in_dir", help="Directorio donde se encuentran los volumenes a integrar")
 args = parser.parse_args()
 
-out_path = 'dataset/dataset_completo.h5'
+out_path = os.path.join('dataset', 'dataset_completo.h5') #'dataset/dataset_completo.h5'
 
 if args.in_dir:
 	in_path = args.in_dir
 else:
-	in_path = 'dataset/pretrain_datasets/features_fsl_strip'
+	in_path = os.path.join('dataset', 'pretrain_datasets', 'features_fsl_strip') #'dataset/pretrain_datasets/features_fsl_strip'
 
 
 mri_dir = next(os.walk(in_path))[2] # [2]: lists files; [1]: lists subdirectories; [0]: ?
@@ -70,7 +74,8 @@ with h5py.File(out_path, "a") as f:
 		print(img_data.dtype)
 
 		'''
-		Por cada imagen se crea un dataset, el nombre del dataset es el valor de mri y los datos son los valores de los pixeles
+		Por cada imagen se crea un dataset, el nombre del dataset es el valor de mri y los datos son los 
+		valores de los pixeles
 		'''
 
 		if args.groupname == 'affine':

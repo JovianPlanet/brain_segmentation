@@ -15,6 +15,11 @@ from unet2D.unet2D import unet2D, dice_coeff, dice_coef_loss, plot_slice
 from segmentation_and_analysis.read_h5py import get_array, get_h5_keys
 
 '''
+Codigo que utiliza los pesos entrenados por la UNET2D para segmentar un nuevo volumen, generando un
+nuevo volumen reconstruido a partir de cada slice
+'''
+
+'''
 CORTICAL_GRAY_MATTER = 1
 BASAL_GANGLIA = 2
 WHITE_MATTER = 3 
@@ -34,9 +39,9 @@ TISSUE = args.tejido
 tissues = { 'GM' : 1, 'BG' : 2, 'WM' : 3, 'WML' : 4,
             'CSF' : 5, 'VEN' : 6, 'CER' : 7, 'BSTEM' : 8}
 
-result_folder = 'predictions/2D'
-
-datos_ = 'dataset/dataset_completo.h5'
+result_folder = os.path.join('predictions', '2D') #'predictions/2D'
+datos_ = os.path.join('dataset', 'dataset_completo.h5') #'dataset/dataset_completo.h5'
+pesos_folder = os.path.join('Pesos', '2D')
 
 feats = get_h5_keys(datos_, 'caracteristicas')
 masks = get_h5_keys(datos_, 'etiquetas_'+args.tejido)
@@ -72,7 +77,7 @@ model_unet.compile(optimizer='adam',
                    loss="categorical_crossentropy", 
                    metrics=['accuracy', dice_coeff])'''
 
-model_unet.load_weights(os.path.join('Pesos/2D', args.tejido + '.h5'))
+model_unet.load_weights(os.path.join(pesos_folder, args.tejido + '.h5'))
 
 for index_, i in enumerate(idx[len(feats)-int(len(feats)*0.2/2):]):
 	test_images = []
@@ -101,7 +106,6 @@ for index_, i in enumerate(idx[len(feats)-int(len(feats)*0.2/2):]):
 	a partir de ellas
 	'''
 	segmented = np.zeros((240, 240, 48))
-	#print(test_images.shape)
 
 	for k in range (test_masks.shape[0]):
 		prueba = test_images[k,...]
@@ -117,6 +121,7 @@ for index_, i in enumerate(idx[len(feats)-int(len(feats)*0.2/2):]):
 		segmented[:,:,k] = predictions > 0.5
 
 		#plot_slice(prueba, test_masks[i,:,:], predictions)
+
 	print('segmented = {}\n'.format(segmented.shape))
 
 	Path(os.path.join(result_folder, feats[i])).mkdir(parents=True, exist_ok=True)

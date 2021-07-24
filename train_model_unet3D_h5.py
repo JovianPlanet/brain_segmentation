@@ -5,6 +5,10 @@ import argparse
 from pathlib import Path
 from unet3D.tf_unet3D import *
 
+'''
+Codigo para entrenar la red UNET3D
+'''
+
 np.set_printoptions(precision=2, suppress=True)
 
 parser = argparse.ArgumentParser()
@@ -30,13 +34,14 @@ CEREBELLUM = 7
 BRAINSTEM = 8
 '''
 
-feat_dir = 'dataset/3D/feat/'
-mask_dir = os.path.join('dataset/3D/mask/', args.tejido)
-val_feat_dir = 'dataset/3D/val_feat/'
-val_mask_dir = os.path.join('dataset/3D/val_mask/', args.tejido)
+feat_dir = os.path.join('dataset', '3D', 'feat') #'dataset/3D/feat/'
+mask_dir = os.path.join('dataset', '3D', 'mask', args.tejido)
+val_feat_dir = os.path.join('dataset', '3D', 'val_feat')
+val_mask_dir = os.path.join('dataset', '3D', 'val_mask', args.tejido)
+pesos_folder = os.path.join('Pesos', '3D')
 
-weights_dir = 'Pesos/3D/' + TISSUE + '.h5'
-Path('Pesos/3D/').mkdir(parents=True, exist_ok=True)
+weights_dir = os.path.join(pesos_folder, TISSUE+'.h5') #'Pesos/3D/' + TISSUE + '.h5'
+Path(pesos_folder).mkdir(parents=True, exist_ok=True)
 
 train_ids = next(os.walk(feat_dir))[1] # [2]: files; [1]: directories
 print(train_ids)
@@ -91,10 +96,13 @@ mask = mask.astype(np.int16)
 val_images = val_images.astype(np.int16) #/ 255
 val_mask = val_mask.astype(np.int16)
 
-model_unet=unet_3D(80, 80, 16)#(60,160,16)
+model_unet=unet_3D(80, 80, 16) 
 model_unet.compile(optimizer='adam', loss = 'binary_crossentropy', #"categorical_crossentropy", 
                     metrics = ['accuracy', dice_coeff]) 
 
+'''
+Callback para guardar el mejor modelo segun el valor del coeficiente DICE en los datos de validacion
+'''
 callbacks = ModelCheckpoint(weights_dir, 
                             monitor='val_dice_coeff', #accuracy', # val_acc
                             verbose=1, 

@@ -1,0 +1,5 @@
+TODO
+
+Volver los siguientes scripts agnosticos al OS:
+	make_reference_segmentations.py 
+	los argumentos de los metodos en /segmentation_and_analysis/utils.py -> check

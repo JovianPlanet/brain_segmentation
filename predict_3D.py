@@ -12,6 +12,11 @@ from pathlib import Path
 
 from unet3D.tf_unet3D import unet_3D, dice_coeff, plot_slice
 
+'''
+Codigo que utiliza los pesos entrenados por la UNET3D para segmentar un nuevo volumen, generando un
+nuevo volumen reconstruido a partir de cada subvolumen
+'''
+
 np.set_printoptions(precision=2, suppress=True)
 
 '''
@@ -34,14 +39,16 @@ TISSUE = args.tejido
 tissues = { 'GM' : 1, 'BG' : 2, 'WM' : 3, 'WML' : 4,
             'CSF' : 5, 'VEN' : 6, 'CER' : 7, 'BSTEM' : 8}
 
-result_folder = 'predictions/3D'
-test_feat_path = 'dataset/3D/test_feat'
-test_mask_path = 'dataset/3D/test_mask'
+result_folder = os.path.join('predictions', '3D') #'predictions/3D'
+test_feat_path = os.path.join('dataset', '3D', 'test_feat') #'dataset/3D/test_feat'
+test_mask_path = os.path.join('dataset', '3D', 'test_mask') #'dataset/3D/test_mask'
+pesos_folder = os.path.join('Pesos', '3D')
 
-model_unet=unet_3D(80, 80, 16)#(60,160,16)
+model_unet=unet_3D(80, 80, 16)
 model_unet.compile(optimizer='adam', loss = "categorical_crossentropy", 
                     metrics = ['accuracy', dice_coeff]) 
-model_unet.load_weights(os.path.join('Pesos/3D', args.tejido + '.h5'))
+
+model_unet.load_weights(os.path.join(pesos_folder, args.tejido + '.h5'))
 
 for subject in natsorted(os.listdir(test_feat_path)):
     print ('Predicting labels for subject {}...'.format(subject))

@@ -4,6 +4,11 @@ from pathlib import Path
 from segmentation_and_analysis.utils import *
 from segmentation_and_analysis.segmentation_libraries import get_manual_mask, fsl_bet
 
+'''
+Codigo para normalizar respecto de una imagen de muestra (en este caso una imagen de MRBrainS13),
+el resto de imagenes de las bases de datos MRI. Ademas se realiza extraccion de cerebro.
+''' 
+
 parser = argparse.ArgumentParser()
 
 parser.add_argument("dataset", 
@@ -11,20 +16,20 @@ parser.add_argument("dataset",
 	help="Nombre del dataset a crear")
 args = parser.parse_args()
 
-MRBrains13_dir = 'dataset/input_datasets/MRBrainS13DataNii/TrainingData/'
-MRBrains18_dir = 'dataset/input_datasets/MRBrainS18DataNii/training/'
+MRBrains13_dir = os.path.join('dataset', 'input_datasets', 'MRBrainS13DataNii', 'TrainingData') #'dataset/input_datasets/MRBrainS13DataNii/TrainingData/'
+MRBrains18_dir = os.path.join('dataset', 'input_datasets', 'MRBrainS18DataNii', 'training') #'dataset/input_datasets/MRBrainS18DataNii/training/'
 
-MRBrains13_FSL_strip = 'dataset/pretrain_datasets/MRBrains13_fsl_strip/'
-MRBrains18_FSL_strip = 'dataset/pretrain_datasets/MRBrains18_oriented_fsl_strip'
+MRBrains13_FSL_strip = os.path.join('dataset', 'pretrain_datasets', 'MRBrains13_fsl_strip') #'dataset/pretrain_datasets/MRBrains13_fsl_strip/'
+MRBrains18_FSL_strip = os.path.join('dataset', 'pretrain_datasets', 'MRBrains18_oriented_fsl_strip') #'dataset/pretrain_datasets/MRBrains18_oriented_fsl_strip'
 
-FSL_skull_stripped_ds = 'dataset/pretrain_datasets/features_fsl_strip'
+FSL_skull_stripped_ds = os.path.join('dataset', 'pretrain_datasets', 'features_fsl_strip') #'dataset/pretrain_datasets/features_fsl_strip'
 
-IBSR_stripped_dir = 'dataset/pretrain_datasets/IBSR_strip_registered'
-IBSR_seg_labels = 'dataset/pretrain_datasets/IBSR_seg_registered'
-labels_dir = 'dataset/pretrain_datasets/labels'
+IBSR_stripped_dir = os.path.join('dataset', 'pretrain_datasets', 'IBSR_strip_registered') #'dataset/pretrain_datasets/IBSR_strip_registered'
+IBSR_seg_labels = os.path.join('dataset', 'pretrain_datasets', 'IBSR_seg_registered') #'dataset/pretrain_datasets/IBSR_seg_registered'
+labels_dir = os.path.join('dataset', 'pretrain_datasets', 'labels') #'dataset/pretrain_datasets/labels'
 
-MRBrainS13_MASKS = 'dataset/pretrain_datasets/MRBrainS13_MASKS/'
-MRBrainS18_MASKS = 'dataset/pretrain_datasets/MRBrainS18_MASKS/'
+MRBrainS13_MASKS = os.path.join('dataset', 'pretrain_datasets', 'MRBrainS13_MASKS') #'dataset/pretrain_datasets/MRBrainS13_MASKS/'
+MRBrainS18_MASKS = os.path.join('dataset', 'pretrain_datasets', 'MRBrainS18_MASKS') #'dataset/pretrain_datasets/MRBrainS18_MASKS/'
 
 Path(FSL_skull_stripped_ds).mkdir(parents=True, exist_ok=True)
 Path(MRBrains13_FSL_strip).mkdir(parents=True, exist_ok=True)

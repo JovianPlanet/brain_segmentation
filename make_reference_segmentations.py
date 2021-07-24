@@ -3,9 +3,14 @@ from pathlib import Path
 from segmentation_and_analysis.segmentation_libraries import fsl_fast, dipy_segmentation, ants_segmentation
 from segmentation_and_analysis.utils import change_dtype
 
-brains_dir = 'dataset/pretrain_datasets/features_fsl_strip'
-dipy_out_dir = 'dataset/reference_segmentations/dipy'
-fsl_out_dir = 'dataset/reference_segmentations/fsl'
+'''
+En este codigo se crean las segmentaciones de referencia usando los algoritmos de segmentacion de DIPY y FSL,
+con el fin de comparar sus resultado con los de las segmentaciones de las redes UNET
+'''
+
+brains_dir = os.path.join('dataset', 'pretrain_datasets', 'features_fsl_strip') #'dataset/pretrain_datasets/features_fsl_strip'
+dipy_out_dir = os.path.join('dataset', 'reference_segmentations', 'dipy') #'dataset/reference_segmentations/dipy'
+fsl_out_dir = os.path.join('dataset', 'reference_segmentations', 'fsl') #'dataset/reference_segmentations/fsl'
 
 Path(dipy_out_dir).mkdir(parents=True, exist_ok=True)
 Path(fsl_out_dir).mkdir(parents=True, exist_ok=True)
@@ -14,8 +19,12 @@ subjects = next(os.walk(brains_dir))[2] # [2]: lists files; [1]: lists subdirect
 
 for subject in subjects:
 
-	fast = fsl_fast(os.path.join(brains_dir, subject), 
-	'/media/henryareiza/Disco_Compartido/david/codes/dataset/reference_segmentations/fsl/'+'HOLAfast_'+subject)
+	'''
+	Ojo: fsl_fast no permite que las imagenes de salida queden en el directorio deseado con la 
+	estructura de directorios que se viene trabajando
+	'''
+	fast = fsl_fast(os.path.join(brains_dir, subject))#, 
+	#'/media/henryareiza/Disco_Compartido/david/codes/dataset/reference_segmentations/fsl/'+'HOLAfast_'+subject)
 
 	ext = 7 if '.gz' in subject else 4
 

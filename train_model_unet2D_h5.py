@@ -8,6 +8,10 @@ from tensorflow.keras.callbacks import ModelCheckpoint
 from unet2D.unet2D import unet2D, dice_coeff, dice_coef_loss
 from segmentation_and_analysis.read_h5py import get_array, get_h5_keys
 
+'''
+Codigo para entrenar la red UNET2D
+'''
+
 parser = argparse.ArgumentParser()
 parser.add_argument("tejido", 
 	choices=['GM', 'CSF', 'WM'], 
@@ -16,13 +20,14 @@ args = parser.parse_args()
 
 TISSUE = args.tejido
 
-weights_path = 'Pesos/2D/' + TISSUE + '.h5'
-Path('Pesos/2D/').mkdir(parents=True, exist_ok=True)
+pesos_folder = os.path.join('Pesos', '2D')
+weights_path = os.path.join(pesos_folder, TISSUE+'.h5') #'Pesos/2D/' + TISSUE + '.h5'
+Path(pesos_folder).mkdir(parents=True, exist_ok=True)
 
 tissues = { 'GM' : 1, 'BG' : 2, 'WM' : 3, 'WML' : 4,
             'CSF' : 5, 'VEN' : 6, 'CER' : 7, 'BSTEM' : 8}
 
-datos_ = 'dataset/dataset_completo.h5'
+datos_ = os.path.join('dataset', 'dataset_completo.h5') #'dataset/dataset_completo.h5'
 
 feats = get_h5_keys(datos_, 'caracteristicas')
 masks = get_h5_keys(datos_, 'etiquetas_'+args.tejido)

@@ -5,10 +5,19 @@ import numpy as np
 from nipype.interfaces.fsl import BET
 from ants import image_read, image_write, registration, apply_transforms
 
-def girarVolumen(ref_path='dataset/input_datasets/MRBrainS13DataNii/TrainingData/2/T1.nii', 
-				in_dir='dataset/input_datasets/MRBrainS18DataNii/training', 
-				out_dir='',
+def girarVolumen(ref_path=None, #'dataset/input_datasets/MRBrainS13DataNii/TrainingData/2/T1.nii', 
+				in_dir=None, #'dataset/input_datasets/MRBrainS18DataNii/training', 
+				out_dir=None, #'',
 				mask=False):
+
+	if ref_path == None:
+		ref_path = os.path.join('dataset', 'input_datasets', 'MRBrainS13DataNii', 'TrainingData', '2', 'T1.nii')
+
+	if in_dir == None:
+		in_dir = os.path.join('dataset', 'input_datasets', 'MRBrainS18DataNii', 'training')
+
+	if out_dir == None:
+		out_dir = os.path.join('')
 
 	ref_vol = nib.load(ref_path)
 
@@ -70,10 +79,19 @@ def normalize_labels(in_dir, in_file, out_dir):
 	nib.save(wm_vol, os.path.join(wm_dir, in_file[:-4]+'_MASK_WM.nii'))
 
 def ants_registration(reg_type, 
-		ref_mri='dataset/input_datasets/MRBrainS13DataNii/TrainingData/2/T1.nii', 
+		ref_mri=None, #'dataset/input_datasets/MRBrainS13DataNii/TrainingData/2/T1.nii', 
 		reg_mri='', 
-		reg_dir='dataset/input_datasets/IBSR_nifti_stripped', 
-		out_dir='dataset/pretrain_datasets/IBSR_registered'):
+		reg_dir=None, #'dataset/input_datasets/IBSR_nifti_stripped', 
+		out_dir=None): #'dataset/pretrain_datasets/IBSR_registered'):
+
+	if ref_mri == None:
+		ref_mri = os.path.join('dataset', 'input_datasets', 'MRBrainS13DataNii', 'TrainingData', '2', 'T1.nii')
+
+	if reg_dir == None:
+		reg_dir = os.path.join('dataset', 'input_datasets', 'IBSR_nifti_stripped')
+
+	if reg_dir == None:
+		reg_dir = os.path.join('dataset', 'pretrain_datasets', 'IBSR_registered')
 
 	if reg_mri:
 		reg_mri = '_'+reg_mri
