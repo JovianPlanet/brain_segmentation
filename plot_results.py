@@ -112,10 +112,10 @@ for index_, i in enumerate(idx):
     #fig = ax.get_figure()
     #plt.savefig(analysis_folder+'/projection_seg_MRBrainS'+DATASET+'-'+SUBJECT+'.tiff', dpi=300, format='tiff')
 
-    name = os.path.join(analysis_folder, feat[i].split('.')[0]+'_'+args.tejido+'.eps')
+    name = os.path.join(analysis_folder, feat[i].split('.')[0]+'_'+args.tejido+'.pdf')
     plt.savefig(name, #analysis_folder+'/'+feat[i].split('.')[0]+'_'+args.tejido+'.tiff', 
                 dpi=300, 
-                format='eps', #'tiff', 
+                format='pdf', #'tiff', 
                 transparent=True, 
                 bbox_inches='tight', 
                 pad_inches=0.01)

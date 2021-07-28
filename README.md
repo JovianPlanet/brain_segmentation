@@ -36,15 +36,25 @@ If your working with the MRBrainS18 dataset you must modify it to have this stru
 2. Run make_h5.py, the possible arguments are: ['caracteristicas', 'etiquetas_CSF', 'etiquetas_GM', 'etiquetas_WM', 'affine']. Run once for each argument. It outputs the 'dataset_completo.h5' file which contains all the images in the dataset with the respective manual segmentations and affine matrix. --in_dir es un argumento opcional para especificar el directorio donde se encuentran las segmentaciones maniales. --in_dir is an optional argument for specifying the input directory where manual segmentation volumes are located, it defaults to 'dataset/pretrain_datasets/features_fsl_strip'
 
 	e.g.: python3.8 make_h5py.py caracteristicas
+	
 	python3.8 make_h5py.py etiquetas_CSF --in_dir dataset/pretrain_datasets/MRBrainS13_MASKS
+	
 	python3.8 make_h5py.py etiquetas_GM --in_dir dataset/pretrain_datasets/MRBrainS13_MASKS
+	
 	python3.8 make_h5py.py etiquetas_WM --in_dir dataset/pretrain_datasets/MRBrainS13_MASKS
+	
 	python3.8 make_h5py.py etiquetas_WM --in_dir dataset/pretrain_datasets/MRBrainS18_MASKS
+	
 	python3.8 make_h5py.py etiquetas_GM --in_dir dataset/pretrain_datasets/MRBrainS18_MASKS
+	
 	python3.8 make_h5py.py etiquetas_CSF --in_dir dataset/pretrain_datasets/MRBrainS18_MASKS
+	
 	python3.8 make_h5py.py etiquetas_CSF --in_dir dataset/pretrain_datasets/labels_CSF
+	
 	python3.8 make_h5py.py etiquetas_GM --in_dir dataset/pretrain_datasets/labels_GM
+	
 	python3.8 make_h5py.py etiquetas_WM --in_dir dataset/pretrain_datasets/labels_WM
+	
 	python3.8 make_h5py.py affine
 
 3. Run 'make_subvolumes_h5.py' to create 3D patches of the original MRI, this is for training the UNET3D later. Argument is the path to the input h5 file 
