@@ -158,30 +158,32 @@ for index_, i in enumerate(idx):
 		
 	cdf = pd.concat([df_roc, df_jac, df_ssim, df_DICE])
 
-	mdf = pd.melt(cdf, id_vars=['Métrica'], var_name=['Técnica'], value_name='Puntaje')
+mdf = pd.melt(cdf, id_vars=['Métrica'], var_name=['Técnica'], value_name='Puntaje')
 
-	Path(analysis_folder).mkdir(parents=True, exist_ok=True)
+print('mdf is: {}'.format(mdf))
 
-	ax = sns.boxplot(x="Técnica", y="Puntaje", hue="Métrica", data=mdf)
-	ax.axvline(x=1.5, color='0.4', linestyle=':')
-	ax.axvline(x=0.5, color='0.4', linestyle=':')
-	ax.axvline(x=2.5, color='0.4', linestyle=':')
+Path(analysis_folder).mkdir(parents=True, exist_ok=True)
 
-	ax.set_title(TISSUE)
+ax = sns.boxplot(x="Técnica", y="Puntaje", hue="Métrica", data=mdf)
+ax.axvline(x=1.5, color='0.4', linestyle=':')
+ax.axvline(x=0.5, color='0.4', linestyle=':')
+ax.axvline(x=2.5, color='0.4', linestyle=':')
 
-	fig = ax.get_figure()
-	savename = os.path.join(analysis_folder, 'boxplot_'+subject+'_'+TISSUE)
-	fig.savefig(savename, dpi=300, format='eps')
+ax.set_title(TISSUE)
 
-	cdf = pd.concat([df_roc, df_jac, df_ssim, df_DICE], join='inner').sort_index(level=['0', '1', '2', '3', '4', '5', '6'])
-	cdf = cdf.reindex(columns=['Métrica', 'FSL', 'Dipy', 'U-Net 2D', 'U-Net 3D'])
-	
-	savename = os.path.join(analysis_folder, 'table_'+subject+'_'+TISSUE+'.xlsx')
-	cdf.to_excel(savename)
+fig = ax.get_figure()
+savename = os.path.join(analysis_folder, 'boxplot_'+TISSUE)
+fig.savefig(savename, dpi=300, format='eps')
 
-	plt.show()
-	plt.clf()
-	plt.close()
+cdf = pd.concat([df_roc, df_jac, df_ssim, df_DICE], join='inner').sort_index(level=['0', '1', '2', '3', '4', '5', '6'])
+cdf = cdf.reindex(columns=['Métrica', 'FSL', 'Dipy', 'U-Net 2D', 'U-Net 3D'])
+
+savename = os.path.join(analysis_folder, 'table_'+TISSUE+'.xlsx')
+cdf.to_excel(savename)
+
+plt.show()
+plt.clf()
+plt.close()
 
 
 
